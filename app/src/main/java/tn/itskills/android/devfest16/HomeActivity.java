@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 import tn.itskills.android.devfest16.models.Post;
 import tn.itskills.android.devfest16.models.Student;
 
@@ -28,12 +30,17 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
     private DatabaseReference mDatabase;
 
+    private Post mPost;
+    private ArrayList<Post> mPosts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mPosts = new ArrayList<>();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,12 +94,16 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 //                    mPostMessage.setText("No posts");
 //                }
 
+                mPosts.clear();
                 for (DataSnapshot keys : dataSnapshot.child("posts").getChildren()) {
                     //String to temporarily store the whole child of the inidividual user's DB node ----> It still produces different order of the keys
-                    Post post = keys.getValue(Post.class);
+                    mPost = keys.getValue(Post.class);
 
-                    Log.i(TAG, "tempKey = "+post.title);
-                    mPostMessage.setText("key = " + post.title + "\n");
+                    mPosts.add(mPost);
+
+                    Log.i(TAG, "post:title = "+mPost.title);
+
+                    mPostMessage.append("post:title = " + mPost.title + "\n");
 
                 }
 
@@ -140,13 +151,15 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
                 signOut();
                 break;
             case R.id.button_read_messages:
-                readPostMessage();
+                //readPostMessage();
                 break;
         }
     }
 
     private void readPostMessage() {
-
+        for (Post post: mPosts) {
+            mPostMessage.append("post:title = " + post.title + " ");
+        }
     }
 
     private void signOut() {
