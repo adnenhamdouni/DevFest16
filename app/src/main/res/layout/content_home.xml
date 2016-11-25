@@ -13,11 +13,25 @@
     tools:context="tn.itskills.android.devfest16.HomeActivity"
     tools:showIn="@layout/activity_home">
 
+    <TextView
+        android:id="@+id/post_message"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"/>
+
     <Button
         android:id="@+id/button_sign_out"
         android:text="SignOut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"/>
+
+    <Button
+        android:id="@+id/button_read_messages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Read Messages"
+        android:layout_marginTop="5dp"
+        android:layout_above="@+id/button_sign_out"/>
 
 </RelativeLayout>
