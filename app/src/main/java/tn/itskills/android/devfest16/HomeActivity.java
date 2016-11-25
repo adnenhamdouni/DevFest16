@@ -145,7 +145,8 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
 
             Log.i(TAG, "post:title = "+mPost.title);
 
-            mPostMessage.append("post:title = " + mPost.title + "\n");
+            mPostMessage.append(mPost.author + ": " + mPost.title + "\n");
+
 
         }
 
@@ -169,4 +170,5 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
         Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
         mPostMessage.setText("loadPost:onCancelled");
     }
+
 }
