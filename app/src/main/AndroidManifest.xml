@@ -25,4 +25,20 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
+    <service
+        android:name="tn.itskills.android.devfest16.services.MyFirebaseMessagingService"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        </intent-filter>
+    </service>
+
+    <service
+        android:name="tn.itskills.android.devfest16.services.MyFirebaseInstanceIdService"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+        </intent-filter>
+    </service>
+
 </manifest>

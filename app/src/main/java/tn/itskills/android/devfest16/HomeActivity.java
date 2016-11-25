@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import tn.itskills.android.devfest16.models.Post;
 import tn.itskills.android.devfest16.models.Student;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener{
+public class HomeActivity extends BaseActivity implements ValueEventListener, View.OnClickListener{
 
     private String TAG = "HomeActivity";
 
@@ -55,81 +55,9 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                Log.i(TAG, "loadPost:onDataChange");
-                //String name = dataSnapshot.child("name").getValue().toString();
-                //Student student = dataSnapshot.child("student").getValue(Student.class);
 
-                Student student = dataSnapshot.child("students").child("student").getValue(Student.class);
 
-//                if (!name.isEmpty()) {
-//                    mPostMessage.setText("name = "+name);
-//                } else {
-//                    mPostMessage.setText("No names");
-//                }
-
-//                if (student != null) {
-//                    mPostMessage.setText("name = "+student.name);
-//                } else {
-//                    mPostMessage.setText("No students");
-//                }
-
-//                for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                    for (DataSnapshot single : child.getChildren()) {
-//
-//                        Object map = single.getValue();
-//                        String a = map.toString();
-//                        mPostMessage.append(a + "\n");
-//                    }
-//                }
-
-//                Object post = dataSnapshot.child("user-posts").child(getUid()).getValue();
-//
-//                if (post != null) {
-//                    mPostMessage.setText("post per user = "+post.toString());
-//                } else {
-//                    mPostMessage.setText("No posts");
-//                }
-
-                mPosts.clear();
-                for (DataSnapshot keys : dataSnapshot.child("posts").getChildren()) {
-                    //String to temporarily store the whole child of the inidividual user's DB node ----> It still produces different order of the keys
-                    mPost = keys.getValue(Post.class);
-
-                    mPosts.add(mPost);
-
-                    Log.i(TAG, "post:title = "+mPost.title);
-
-                    mPostMessage.append("post:title = " + mPost.title + "\n");
-
-                }
-
-//                //Map<String, Object> childUpdates = new HashMap<>();
-//                String key = mDatabase.child("posts").push().getKey();
-//                Object post = dataSnapshot.child("posts/"+ key).getValue();
-//
-//                mPostMessage.setText("key = " + key + "\n");
-
-//                if (post != null) {
-//                    mPostMessage.setText("childUpdates = " + post.toString());
-//                } else {
-//                    mPostMessage.setText("No childUpdates");
-//                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.i(TAG, "loadPost:onCancelled");
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                mPostMessage.setText("loadPost:onCancelled");
-            }
-        };
-
-        mDatabase.addValueEventListener(postListener);
+        mDatabase.addValueEventListener(this);
     }
 
 
@@ -169,4 +97,76 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener{
     }
 
 
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        // Get Post object and use the values to update the UI
+        Log.i(TAG, "loadPost:onDataChange");
+        //String name = dataSnapshot.child("name").getValue().toString();
+        //Student student = dataSnapshot.child("student").getValue(Student.class);
+
+        Student student = dataSnapshot.child("students").child("student").getValue(Student.class);
+
+//                if (!name.isEmpty()) {
+//                    mPostMessage.setText("name = "+name);
+//                } else {
+//                    mPostMessage.setText("No names");
+//                }
+
+//                if (student != null) {
+//                    mPostMessage.setText("name = "+student.name);
+//                } else {
+//                    mPostMessage.setText("No students");
+//                }
+
+//                for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                    for (DataSnapshot single : child.getChildren()) {
+//
+//                        Object map = single.getValue();
+//                        String a = map.toString();
+//                        mPostMessage.append(a + "\n");
+//                    }
+//                }
+
+//                Object post = dataSnapshot.child("user-posts").child(getUid()).getValue();
+//
+//                if (post != null) {
+//                    mPostMessage.setText("post per user = "+post.toString());
+//                } else {
+//                    mPostMessage.setText("No posts");
+//                }
+
+        mPosts.clear();
+        mPostMessage.setText("");
+        for (DataSnapshot keys : dataSnapshot.child("posts").getChildren()) {
+            //String to temporarily store the whole child of the inidividual user's DB node ----> It still produces different order of the keys
+            mPost = keys.getValue(Post.class);
+
+            mPosts.add(mPost);
+
+            Log.i(TAG, "post:title = "+mPost.title);
+
+            mPostMessage.append("post:title = " + mPost.title + "\n");
+
+        }
+
+//                //Map<String, Object> childUpdates = new HashMap<>();
+//                String key = mDatabase.child("posts").push().getKey();
+//                Object post = dataSnapshot.child("posts/"+ key).getValue();
+//
+//                mPostMessage.setText("key = " + key + "\n");
+
+//                if (post != null) {
+//                    mPostMessage.setText("childUpdates = " + post.toString());
+//                } else {
+//                    mPostMessage.setText("No childUpdates");
+//                }
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        // Getting Post failed, log a message
+        Log.i(TAG, "loadPost:onCancelled");
+        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+        mPostMessage.setText("loadPost:onCancelled");
+    }
 }
