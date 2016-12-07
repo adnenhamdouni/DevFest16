@@ -171,6 +171,10 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
         // Get Post object and use the values to update the UI
         Log.i(TAG, "loadPost:onDataChange");
 
+
+        Query queryRef1 = dataSnapshot.child("posts").getRef().orderByChild("starCount");
+        Query queryRef2 = dataSnapshot.child("posts").getRef().orderByChild("starCount").equalTo(0);
+
         mPosts.clear();
         mPostMessage.setText("");
         Log.i(TAG, "HomeActivity:onDataChange ====> Posts for all users");
