@@ -113,7 +113,7 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
 
         Student student2 = dataSnapshot.child("students").child("student").getValue(Student.class);
         mPostMessage.append("SimpleChild: Students:Student:ame = " + student2.name + "\n");
-
+        
     }
 
     @Override
