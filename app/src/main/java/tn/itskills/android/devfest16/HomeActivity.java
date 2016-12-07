@@ -105,79 +105,15 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
     public void onDataChange(DataSnapshot dataSnapshot) {
         // Get Post object and use the values to update the UI
         Log.i(TAG, "loadPost:onDataChange");
-        //String name = dataSnapshot.child("name").getValue().toString();
-        //Student student = dataSnapshot.child("student").getValue(Student.class);
+        String name = dataSnapshot.child("name").getValue().toString();
+        mPostMessage.append("SimpleChild: Name = " + name + "\n");
 
-        Student student = dataSnapshot.child("students").child("student").getValue(Student.class);
+        Student student1 = dataSnapshot.child("student").getValue(Student.class);
+        mPostMessage.append("SimpleChild: Student:name = " + student1.name + "\n");
 
-//                if (!name.isEmpty()) {
-//                    mPostMessage.setText("name = "+name);
-//                } else {
-//                    mPostMessage.setText("No names");
-//                }
+        Student student2 = dataSnapshot.child("students").child("student").getValue(Student.class);
+        mPostMessage.append("SimpleChild: Students:Student:ame = " + student2.name + "\n");
 
-//                if (student != null) {
-//                    mPostMessage.setText("name = "+student.name);
-//                } else {
-//                    mPostMessage.setText("No students");
-//                }
-
-//                for (DataSnapshot child : dataSnapshot.getChildren()) {
-//                    for (DataSnapshot single : child.getChildren()) {
-//
-//                        Object map = single.getValue();
-//                        String a = map.toString();
-//                        mPostMessage.append(a + "\n");
-//                    }
-//                }
-
-//                Object post = dataSnapshot.child("user-posts").child(getUid()).getValue();
-//
-//                if (post != null) {
-//                    mPostMessage.setText("post per user = "+post.toString());
-//                } else {
-//                    mPostMessage.setText("No posts");
-//                }
-
-
-        mPosts.clear();
-        mPostMessage.setText("");
-        Log.i(TAG, "HomeActivity:onDataChange ====> Posts for all users");
-
-        for (DataSnapshot keys : dataSnapshot.child("posts").getChildren()) {
-            mPost = keys.getValue(Post.class);
-
-            mPosts.add(mPost);
-
-            Log.i(TAG, "HomeActivity:onDataChange ====> post:title = "+mPost.title);
-
-            mPostMessage.append(mPost.author + ": " + mPost.title + "\n");
-
-        }
-
-
-        mUserPosts.clear();
-        Log.i(TAG, "HomeActivity:onDataChange ====> Posts For user Uid "+getUid());
-        for (DataSnapshot keys : dataSnapshot.child("user-posts").child(getUid()).getChildren()) {
-
-            mUserPost = keys.getValue(Post.class);
-
-            mUserPosts.add(mUserPost);
-            Log.i(TAG, "HomeActivity:onDataChange ====> post:title "+mUserPost.title);
-
-        }
-
-//                //Map<String, Object> childUpdates = new HashMap<>();
-//                String key = mDatabase.child("posts").push().getKey();
-//                Object post = dataSnapshot.child("posts/"+ key).getValue();
-//
-//                mPostMessage.setText("key = " + key + "\n");
-
-//                if (post != null) {
-//                    mPostMessage.setText("childUpdates = " + post.toString());
-//                } else {
-//                    mPostMessage.setText("No childUpdates");
-//                }
     }
 
     @Override
