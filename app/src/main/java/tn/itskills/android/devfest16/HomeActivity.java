@@ -10,10 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
     private TextView mPostMessage;
 
     private DatabaseReference mDatabase;
+
+    DatabaseReference dbRefPosts, dbRefUserPosts;
 
     private Post mPost;
     private ArrayList<Post> mPosts;
@@ -60,6 +64,69 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mDatabase.addValueEventListener(this);
+
+
+        dbRefPosts = mDatabase.child("posts");
+        dbRefUserPosts = mDatabase.child("user-posts")
+                .child(getUid());
+
+
+
+        Query queryRef1 = dbRefPosts.orderByChild("starCount");
+        Query queryRef2 = dbRefPosts.orderByChild("starCount").equalTo(0);
+
+        PerformQuery(queryRef2);
+
+
+    }
+
+    private void PerformQuery(Query queryRef) {
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // dataSnapshot is the "issue" node with all children with id 0
+                    for (DataSnapshot issue : dataSnapshot.getChildren()) {
+                        // do something with the individual "issues"
+                        Log.i(TAG, "HomeActivity:onCreate ====> onDataChange: issue:title = " + issue.getValue());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        queryRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot snapshot, String previousChild) {
+                Log.i(TAG, "HomeActivity:onCreate ====> onChildAdded : "+snapshot.getKey() + " was " + snapshot.getValue() + " meters tall");
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+        });
     }
 
 
@@ -107,6 +174,8 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
         mPosts.clear();
         mPostMessage.setText("");
         Log.i(TAG, "HomeActivity:onDataChange ====> Posts for all users");
+
+
 
         for (DataSnapshot keys : dataSnapshot.child("posts").getChildren()) {
             mPost = keys.getValue(Post.class);
