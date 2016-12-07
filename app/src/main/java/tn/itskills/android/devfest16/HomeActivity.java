@@ -33,6 +33,10 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
     private Post mPost;
     private ArrayList<Post> mPosts;
 
+
+    private Post mUserPost;
+    private ArrayList<Post> mUserPosts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +45,7 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
         setSupportActionBar(toolbar);
 
         mPosts = new ArrayList<>();
+        mUserPosts = new ArrayList<>();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -134,17 +139,31 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
 //                    mPostMessage.setText("No posts");
 //                }
 
+
         mPosts.clear();
         mPostMessage.setText("");
+        Log.i(TAG, "HomeActivity:onDataChange ====> Posts for all users");
+
         for (DataSnapshot keys : dataSnapshot.child("posts").getChildren()) {
-            //String to temporarily store the whole child of the inidividual user's DB node ----> It still produces different order of the keys
             mPost = keys.getValue(Post.class);
 
             mPosts.add(mPost);
 
-            Log.i(TAG, "post:title = "+mPost.title);
+            Log.i(TAG, "HomeActivity:onDataChange ====> post:title = "+mPost.title);
 
             mPostMessage.append(mPost.author + ": " + mPost.title + "\n");
+
+        }
+
+
+        mUserPosts.clear();
+        Log.i(TAG, "HomeActivity:onDataChange ====> Posts For user Uid "+getUid());
+        for (DataSnapshot keys : dataSnapshot.child("user-posts").child(getUid()).getChildren()) {
+
+            mUserPost = keys.getValue(Post.class);
+
+            mUserPosts.add(mUserPost);
+            Log.i(TAG, "HomeActivity:onDataChange ====> post:title "+mUserPost.title);
 
         }
 
