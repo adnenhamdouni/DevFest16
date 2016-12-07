@@ -19,9 +19,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import tn.itskills.android.devfest16.models.Post;
-import tn.itskills.android.devfest16.models.Student;
 
-public class HomeActivity extends BaseActivity implements ValueEventListener, View.OnClickListener{
+public class HomeActivity extends BaseActivity implements ValueEventListener, View.OnClickListener {
 
     private String TAG = "HomeActivity";
 
@@ -88,7 +87,7 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
     }
 
     private void readPostMessage() {
-        for (Post post: mPosts) {
+        for (Post post : mPosts) {
             mPostMessage.append("post:title = " + post.title + " ");
         }
     }
@@ -100,20 +99,22 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
     }
 
 
-
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         // Get Post object and use the values to update the UI
         Log.i(TAG, "loadPost:onDataChange");
-        String name = dataSnapshot.child("name").getValue().toString();
-        mPostMessage.append("SimpleChild: Name = " + name + "\n");
 
-        Student student1 = dataSnapshot.child("student").getValue(Student.class);
-        mPostMessage.append("SimpleChild: Student:name = " + student1.name + "\n");
 
-        Student student2 = dataSnapshot.child("students").child("student").getValue(Student.class);
-        mPostMessage.append("SimpleChild: Students:Student:ame = " + student2.name + "\n");
-        
+        Object post = dataSnapshot.child("user-posts").child(getUid()).getValue();
+
+        if (post != null) {
+            mPostMessage.setText("post per user = " + post.toString());
+            Log.i(TAG, "ComplexChild: post per user = " + post.toString() +"\n");
+        } else {
+            mPostMessage.setText("No posts");
+            Log.i(TAG, "ComplexChild: No posts");
+        }
+
     }
 
     @Override
