@@ -104,15 +104,31 @@ public class HomeActivity extends BaseActivity implements ValueEventListener, Vi
         // Get Post object and use the values to update the UI
         Log.i(TAG, "loadPost:onDataChange");
 
+        mPosts.clear();
+        mPostMessage.setText("");
+        Log.i(TAG, "HomeActivity:onDataChange ====> Posts for all users");
 
-        Object post = dataSnapshot.child("user-posts").child(getUid()).getValue();
+        for (DataSnapshot keys : dataSnapshot.child("posts").getChildren()) {
+            mPost = keys.getValue(Post.class);
 
-        if (post != null) {
-            mPostMessage.setText("post per user = " + post.toString());
-            Log.i(TAG, "ComplexChild: post per user = " + post.toString() +"\n");
-        } else {
-            mPostMessage.setText("No posts");
-            Log.i(TAG, "ComplexChild: No posts");
+            mPosts.add(mPost);
+
+            Log.i(TAG, "HomeActivity:onDataChange ====> post:title = " + mPost.title);
+
+            mPostMessage.append(mPost.author + ": " + mPost.title + "\n");
+
+        }
+
+
+        mUserPosts.clear();
+        Log.i(TAG, "HomeActivity:onDataChange ====> Posts For user Uid " + getUid());
+        for (DataSnapshot keys : dataSnapshot.child("user-posts").child(getUid()).getChildren()) {
+
+            mUserPost = keys.getValue(Post.class);
+
+            mUserPosts.add(mUserPost);
+            Log.i(TAG, "HomeActivity:onDataChange ====> post:title " + mUserPost.title);
+
         }
 
     }
